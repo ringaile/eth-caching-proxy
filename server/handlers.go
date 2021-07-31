@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"rest-api/models"
 	"strconv"
@@ -23,7 +22,7 @@ func (s *server) GetBlockHandler() http.HandlerFunc {
 		}
 
 		// get latest block
-		data, err := s.ethClient.GetBlock(param)
+		data, err := s.Proxy.GetBlock(param)
 		if err != nil {
 			sendResponse(w, r, nil, http.StatusInternalServerError)
 			return
@@ -42,7 +41,7 @@ func (s *server) GetTransactionHandler() http.HandlerFunc {
 		}
 
 		// get block
-		data, err := s.ethClient.GetBlock(block_param)
+		data, err := s.Proxy.GetBlock(block_param)
 		if err != nil {
 			sendResponse(w, r, nil, http.StatusInternalServerError)
 			return
@@ -60,7 +59,6 @@ func (s *server) GetTransactionHandler() http.HandlerFunc {
 		} else {
 			if len(data.Transactions) > val {
 				result = data.Transactions[val]
-				log.Print(result)
 			} else {
 				sendResponse(w, r, nil, http.StatusInternalServerError)
 				return

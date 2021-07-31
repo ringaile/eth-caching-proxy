@@ -1,20 +1,20 @@
 package server
 
 import (
-	"rest-api/ethclient"
+	"rest-api/proxy"
 
 	"github.com/gorilla/mux"
 )
 
 type server struct {
-	Router    *mux.Router
-	ethClient *ethclient.CloudflareEthGateway
+	Router *mux.Router
+	Proxy  *proxy.ProxyImpl
 }
 
-func New(client *ethclient.CloudflareEthGateway) *server {
+func New(proxy *proxy.ProxyImpl) *server {
 	s := &server{
-		ethClient: client,
-		Router:    mux.NewRouter(),
+		Proxy:  proxy,
+		Router: mux.NewRouter(),
 	}
 	s.initRoutes()
 	return s
