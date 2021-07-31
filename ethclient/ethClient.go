@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"rest-api/models"
 	"time"
 )
 
 type EthClient interface {
-	GetBlock(param string) (*Block, error)
+	GetBlock(param string) (*models.Block, error)
 }
 
 type CloudflareEthGateway struct {
@@ -31,8 +32,8 @@ func NewCloudflareEthGateway(url string, _ string) CloudflareEthGateway {
 	return cloudflareEthGateway
 }
 
-func (c *CloudflareEthGateway) GetBlock(param string) (*Block, error) {
-	request := &GetBlockRequest{
+func (c *CloudflareEthGateway) GetBlock(param string) (*models.Block, error) {
+	request := &models.GetBlockRequest{
 		Jsonrpc: "2.0",
 		Method:  "eth_getBlockByNumber",
 		Params:  []interface{}{param, true},
@@ -49,7 +50,7 @@ func (c *CloudflareEthGateway) GetBlock(param string) (*Block, error) {
 	}
 	defer resp.Body.Close()
 
-	var response *Result
+	var response *models.Result
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
 		return nil, nil

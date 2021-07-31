@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"rest-api/ethclient"
 	"rest-api/models"
 
 	"github.com/gorilla/mux"
@@ -20,6 +19,13 @@ func handleBlock(w http.ResponseWriter, r *http.Request) (string, error) {
 	return param, nil
 }
 
+func handleTransaction(w http.ResponseWriter, r *http.Request) (string, string, error) {
+	vars := mux.Vars(r)
+	block := vars["block_param"]
+	trx := vars["txs_param"]
+	return block, trx, nil
+}
+
 func sendResponse(w http.ResponseWriter, _ *http.Request, data interface{}, status int) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
@@ -33,7 +39,7 @@ func sendResponse(w http.ResponseWriter, _ *http.Request, data interface{}, stat
 	}
 }
 
-func mapBlockToJson(b ethclient.Block) models.BlockResponse {
+func mapBlockToJson(b models.Block) models.BlockResponse {
 	return models.BlockResponse{
 		Timestamp:  b.Timestamp,
 		Number:     b.Number,

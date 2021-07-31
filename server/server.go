@@ -29,6 +29,11 @@ func (s *server) initRoutes() {
 	s.Router.HandleFunc("/block/{block_param}", s.GetBlockHandler()).Methods("GET")
 	// router.GET("/block/:block_param", s.GetBlock)
 
+	s.Router.HandleFunc("/block/{block_param}/txs/{txs_param}", s.GetTransactionHandler()).Methods("GET")
+
+	// s.Router.HandleFunc("/save-cache", s.SaveCache()).Methods("GET")
+	// s.Router.HandleFunc("/get-cache", s.GetCache()).Methods("GET")
+
 	// // Get Transaction endpoint
 	// router.GET("/block/:block_param/txs/:txs_param", s.GetTransaction)
 }

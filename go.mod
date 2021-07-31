@@ -9,4 +9,5 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/mingrammer/go-todo-rest-api-example v0.0.0-20190527014715-ae46b4d42804
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 )
