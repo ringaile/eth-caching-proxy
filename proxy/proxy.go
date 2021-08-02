@@ -29,11 +29,11 @@ func (p *ProxyImpl) SetCache(key string, block *models.Block) {
 }
 
 func (p *ProxyImpl) GetCache(key string) (*models.Block, bool) {
-	var block models.Block
+	var block *models.Block
 	var found bool
 	data, found := p.cache.Get(key)
 	if found {
-		block = data.(models.Block)
+		block = data.(*models.Block)
 	}
-	return &block, found
+	return block, found
 }

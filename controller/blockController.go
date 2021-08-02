@@ -28,7 +28,6 @@ func (c *BlockController) GetBlock(key string) (*models.Block, error) {
 		data, err := c.ethClient.GetBlock(key)
 		if err == nil {
 			//do not save latest blocks cause they change
-			//setCache(key, *data)
 			block = data
 		}
 	} else {
