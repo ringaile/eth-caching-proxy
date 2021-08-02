@@ -1,14 +1,27 @@
 package config
 
+import (
+	"log"
+	"os"
+
+	"github.com/BurntSushi/toml"
+)
+
 type Config struct {
-	DB *DBConfig
+	Port              string
+	Timeout           int32
+	DefaultExpiration int32
+	CleanupExpiration int32
+	EthClientUrl      string
 }
 
-type DBConfig struct {
-}
-
-func GetConfig() *Config {
-	return &Config{
-		DB: &DBConfig{},
+func GetConfig() (*Config, error) {
+	conf := Config{}
+	path, _ := os.Getwd()
+	log.Print(path)
+	if _, err := toml.DecodeFile("./config/config.toml", &conf); err != nil {
+		log.Print(err)
+		return nil, nil
 	}
+	return &conf, nil
 }

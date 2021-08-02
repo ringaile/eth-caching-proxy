@@ -4,25 +4,32 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"rest-api/config"
+	"rest-api/controller"
 	"rest-api/ethclient"
 	"rest-api/proxy"
 	"rest-api/server"
 )
 
-func init() {
-
-}
-
 func main() {
 
-	ethClient := ethclient.NewCloudflareEthGateway("https://cloudflare-eth.com", "10")
-	proxy := proxy.NewProxyImpl(&ethClient)
+	// Get config
+	conf, err := config.GetConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	s := server.New(proxy)
+	// Initialize components
+	ethClient := ethclient.NewCloudflareEthGateway(conf.EthClientUrl, conf.Timeout)
+	proxy := proxy.New(conf.DefaultExpiration, conf.CleanupExpiration)
+	blockController := controller.NewBlockController(ethClient, proxy)
+
+	// Start server
+	s := server.New(blockController)
 
 	http.HandleFunc("/", s.Router.ServeHTTP)
 
-	err := http.ListenAndServe(":9000", nil)
+	err = http.ListenAndServe(conf.Port, nil)
 	check(err)
 
 }

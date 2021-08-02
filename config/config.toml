@@ -1,0 +1,5 @@
+Port = ":9000"
+Timeout = 5
+DefaultExpiration = 5
+CleanupExpiration = 5
+EthClientUrl = "https://cloudflare-eth.com"

@@ -3,6 +3,7 @@ package ethclient
 import (
 	"bytes"
 	"encoding/json"
+	"math/rand"
 	"net/http"
 	"rest-api/models"
 	"time"
@@ -14,22 +15,16 @@ type EthClient interface {
 
 type CloudflareEthGateway struct {
 	Url    string
-	client *http.Client
+	Client *http.Client
 }
 
-func NewCloudflareEthGateway(url string, _ string) CloudflareEthGateway {
-	cloudflareEthGateway := CloudflareEthGateway{Url: url}
-
-	// timeOutIntv, err := time.ParseDuration(timeout)
-	// if err != nil {
-	// 	panic("util: Can't parse duration `" + timeout + "`: " + err.Error())
-	// }
-
-	cloudflareEthGateway.client = &http.Client{
-		Timeout: 5 * time.Second,
+func NewCloudflareEthGateway(url string, timeout int32) *CloudflareEthGateway {
+	return &CloudflareEthGateway{
+		Url: url,
+		Client: &http.Client{
+			Timeout: time.Duration(rand.Int31n(timeout)) * time.Second,
+		},
 	}
-
-	return cloudflareEthGateway
 }
 
 func (c *CloudflareEthGateway) GetBlock(param string) (*models.Block, error) {
@@ -44,7 +39,7 @@ func (c *CloudflareEthGateway) GetBlock(param string) (*models.Block, error) {
 
 	req, err := http.NewRequest("POST", c.Url, bytes.NewBuffer(data))
 
-	resp, err := c.client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, nil
 	}
