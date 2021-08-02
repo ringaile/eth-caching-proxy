@@ -32,8 +32,6 @@ type Block struct {
 	Transactions     []Transaction `json:"transactions"`
 	TransactionsRoot string        `json:"transactionsRoot"`
 	Uncles           []string      `json:"uncles"`
-	// https://github.com/ethereum/EIPs/issues/95
-	// SealFields []string `json:"sealFields"`
 }
 
 type Transaction struct {
