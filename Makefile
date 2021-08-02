@@ -7,6 +7,10 @@ all: build run
 build:
 	go build -o bin/main main.go
 
+.PHONY: test
+test:
+	go test ./tests/...
+
 .PHONY: run
 run:
 	go run main.go

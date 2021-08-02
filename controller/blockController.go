@@ -4,7 +4,10 @@ import (
 	"rest-api/ethclient"
 	"rest-api/models"
 	"rest-api/proxy"
+	"strconv"
 )
+
+const LATEST = "latest"
 
 type BlockController struct {
 	ethClient *ethclient.CloudflareEthGateway
@@ -19,7 +22,36 @@ func NewBlockController(ethClient *ethclient.CloudflareEthGateway, proxy *proxy.
 }
 
 func (c *BlockController) GetBlock(key string) (*models.Block, error) {
-	latestBlock, _ := c.ethClient.GetBlock("latest")
+	return c.getBlock(key)
+}
+
+func (c *BlockController) GetTransaction(block_param string, trx_param string) (*models.Transaction, error) {
+	data, err := c.getBlock(block_param)
+	if err != nil {
+		return nil, err
+	}
+
+	// check txr_param index
+	var result models.Transaction
+	val, err := strconv.Atoi(trx_param)
+	if err != nil {
+		for _, trx := range data.Transactions {
+			if trx.Hash == trx_param {
+				result = trx
+			}
+		}
+	} else {
+		if len(data.Transactions) > val {
+			result = data.Transactions[val]
+		} else {
+			return nil, err
+		}
+	}
+	return &result, nil
+}
+
+func (c *BlockController) getBlock(key string) (*models.Block, error) {
+	latestBlock, _ := c.ethClient.GetBlock(LATEST)
 	var block *models.Block
 
 	latest := checkIfBlockIsWithinLast20(key, latestBlock.Number)
