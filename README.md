@@ -1,87 +1,75 @@
-# Go Todo REST API Example
-A RESTful API example for simple todo application with Go
-
-It is a just simple tutorial or example for making simple RESTful API with Go using **gorilla/mux** (A nice mux library) and **gorm** (An ORM for Go)
+# ETH Caching Proxy
+A caching proxy for `eth_getBlockByNumber` written in golang.
 
 ## Installation & Run
 ```bash
 # Download this project
-go get github.com/mingrammer/go-todo-rest-api-example
+go get github.com/ringaile/eth-caching-proxy
 ```
 
-Before running API server, you should set the database config with yours or set the your database config with my values on [config.go](https://github.com/mingrammer/go-todo-rest-api-example/blob/master/config/config.go)
-```go
-func GetConfig() *Config {
-	return &Config{
-		DB: &DBConfig{
-			Dialect:  "mysql",
-			Username: "guest",
-			Password: "Guest0000!",
-			Name:     "todoapp",
-			Charset:  "utf8",
-		},
-	}
-}
+Before running API server, you can configure the application settings [config.toml](https://github.com/ringaile/eth-caching-proxy/blob/main/config/config.toml)
+```toml
+	Port = ":9000"
+	Timeout = 5
+	DefaultExpiration = 5
+	CleanupExpiration = 5
+	EthClientUrl = "https://cloudflare-eth.com"
 ```
 
 ```bash
 # Build and Run
-cd go-todo-rest-api-example
+cd eth-caching-proxy
 go build
-./go-todo-rest-api-example
+./eth-caching-proxy
 
-# API Endpoint : http://127.0.0.1:3000
+# API Endpoint : http://localhost:9000/
 ```
+
+# Makefile
+
+```bash
+# Build and Run
+make all
+
+# API Endpoint : http://localhost:9000/
+```
+
+```bash
+# Build Docker image
+make docker_build
+```
+
+```bash
+# Run Docker image
+make docker_run
+
+# API Endpoint : http://localhost:9000/
+```
+
 
 ## Structure
 ```
-├── app
-│   ├── app.go
-│   ├── handler          // Our API core handlers
-│   │   ├── common.go    // Common response functions
-│   │   ├── projects.go  // APIs for Project model
-│   │   └── tasks.go     // APIs for Task model
-│   └── model
-│       └── model.go     // Models for our application
+├── server
+│   ├── server.go
+│   ├── handlers         	// The API core handlers
+│   └── helpers          	// The API core helpers
+│── model
+│   └── model.go     	 	// Models for the application
+│── ethclient
+│   └── ethclient.go     	// Ethereum client
+│── ethcache
+│   └── ethcache.go      	// Cache
+│── controller
+│   └── blockcontroller.go  // Application logic
 ├── config
-│   └── config.go        // Configuration
+│   └── config.go        	// Configuration
 └── main.go
 ```
 
 ## API
 
-#### /projects
-* `GET` : Get all projects
-* `POST` : Create a new project
+#### /block/:block
+* `GET` : Get a block [has either "latest" or a number as a param.]
 
-#### /projects/:title
-* `GET` : Get a project
-* `PUT` : Update a project
-* `DELETE` : Delete a project
-
-#### /projects/:title/archive
-* `PUT` : Archive a project
-* `DELETE` : Restore a project 
-
-#### /projects/:title/tasks
-* `GET` : Get all tasks of a project
-* `POST` : Create a new task in a project
-
-#### /projects/:title/tasks/:id
-* `GET` : Get a task of a project
-* `PUT` : Update a task of a project
-* `DELETE` : Delete a task of a project
-
-#### /projects/:title/tasks/:id/complete
-* `PUT` : Complete a task of a project
-* `DELETE` : Undo a task of a project
-
-## Todo
-
-- [x] Support basic REST APIs.
-- [ ] Support Authentication with user for securing the APIs.
-- [ ] Make convenient wrappers for creating API handlers.
-- [ ] Write the tests for all APIs.
-- [x] Organize the code with packages
-- [ ] Make docs with GoDoc
-- [ ] Building a deployment process 
+#### /block/:block/txs/:txs
+* `GET` : Get a transaction of a block [has either index or tx hash as a param.]
