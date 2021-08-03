@@ -2,20 +2,20 @@ package ethClient_tests
 
 import (
 	"fmt"
-	"rest-api/models"
+	"rest-api/model"
 )
 
 var testCasesGetBlock = []struct {
 	description   string
 	key           string
-	expectedBlock *models.Block
+	expectedBlock *model.Block
 	expectedError error
 }{
 	// #0
 	{
 		description: "[Successfully received a block.]",
 		key:         "0xc58c82",
-		expectedBlock: &models.Block{
+		expectedBlock: &model.Block{
 			Difficulty:       "0x19f7ee142d8fe6",
 			ExtraData:        "0xd883010a06846765746888676f312e31362e36856c696e7578",
 			GasLimit:         "0xe4e1c0",
@@ -43,7 +43,7 @@ var testCasesGetBlock = []struct {
 	{
 		description: "[No block found.]",
 		key:         "12345",
-		expectedBlock: &models.Block{
+		expectedBlock: &model.Block{
 			Difficulty:       "",
 			ExtraData:        "",
 			GasLimit:         "",

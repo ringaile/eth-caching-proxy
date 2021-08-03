@@ -9,9 +9,9 @@ import (
 func TestBlockController_GetBlock(t *testing.T) {
 	for i := range testCasesGetBlock {
 
-		mockProxy := mocks.NewProxy(5, 5)
+		mockEthCache := mocks.NewEthCache(5, 5)
 		mockEthClient := mocks.NewEthClient("", 5)
-		controller := controller.NewBlockController(&mockEthClient, &mockProxy)
+		controller := controller.NewBlockController(&mockEthClient, &mockEthCache)
 
 		block, err := controller.GetBlock(testCasesGetBlock[i].key)
 
@@ -131,9 +131,9 @@ func TestBlockController_GetBlock(t *testing.T) {
 
 func TestBlockController_GetTransaction(t *testing.T) {
 	for i := range testCasesGetTransaction {
-		mockProxy := mocks.NewProxy(5, 5)
+		mockEthCache := mocks.NewEthCache(5, 5)
 		mockEthClient := mocks.NewEthClient("", 5)
-		controller := controller.NewBlockController(&mockEthClient, &mockProxy)
+		controller := controller.NewBlockController(&mockEthClient, &mockEthCache)
 
 		trx, err := controller.GetTransaction(testCasesGetTransaction[i].blockKey, testCasesGetTransaction[i].trxKey)
 

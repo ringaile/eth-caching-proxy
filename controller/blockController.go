@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"rest-api/ethcache"
 	"rest-api/ethclient"
-	"rest-api/models"
-	"rest-api/proxy"
+	"rest-api/model"
 	"strconv"
 )
 
@@ -11,17 +11,17 @@ const LATEST = "latest"
 
 type BlockController struct {
 	ethClient ethclient.EthClient
-	proxy     proxy.Proxy
+	ethCache  ethcache.EthCache
 }
 
-func NewBlockController(ethClient ethclient.EthClient, proxy proxy.Proxy) *BlockController {
+func NewBlockController(ethClient ethclient.EthClient, ethCache ethcache.EthCache) *BlockController {
 	return &BlockController{
 		ethClient: ethClient,
-		proxy:     proxy,
+		ethCache:  ethCache,
 	}
 }
 
-func (c *BlockController) GetBlock(key string) (*models.Block, error) {
+func (c *BlockController) GetBlock(key string) (*model.Block, error) {
 	block, err := c.getBlock(key)
 	if err != nil {
 		return nil, err
@@ -29,14 +29,14 @@ func (c *BlockController) GetBlock(key string) (*models.Block, error) {
 	return block, err
 }
 
-func (c *BlockController) GetTransaction(block_param string, trx_param string) (*models.Transaction, error) {
+func (c *BlockController) GetTransaction(block_param string, trx_param string) (*model.Transaction, error) {
 	data, err := c.getBlock(block_param)
-	if err == nil {
+	if err != nil {
 		return nil, err
 	}
 
 	// check txr_param index
-	var result models.Transaction
+	var result model.Transaction
 	val, err := strconv.Atoi(trx_param)
 	if err != nil {
 		for _, trx := range data.Transactions {
@@ -54,27 +54,32 @@ func (c *BlockController) GetTransaction(block_param string, trx_param string) (
 	return &result, nil
 }
 
-func (c *BlockController) getBlock(key string) (*models.Block, error) {
-	latestBlock, _ := c.ethClient.GetBlock(LATEST)
-	var block *models.Block
+func (c *BlockController) getBlock(key string) (*model.Block, error) {
+	latestBlock, err := c.ethClient.GetBlock(LATEST)
+	if err != nil {
+		return nil, err
+	}
+	var block *model.Block
 
 	latest := checkIfBlockIsWithinLast20(key, latestBlock.Number)
 
 	if latest {
 		data, err := c.ethClient.GetBlock(key)
 		if err == nil {
-			//do not save latest 20 blocks cause they change
-			block = data
+			return nil, err
 		}
+		//do not save latest 20 blocks cause they change
+		block = data
 	} else {
-		temp, found := c.proxy.GetCache(key)
+		temp, found := c.ethCache.GetCache(key)
 		if !found {
 			//get from eth client
 			data, err := c.ethClient.GetBlock(key)
-			if err == nil {
-				c.proxy.SetCache(key, data)
-				block = data
+			if err != nil {
+				return nil, err
 			}
+			c.ethCache.SetCache(key, data)
+			block = data
 		} else {
 			block = temp
 		}

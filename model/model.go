@@ -1,4 +1,4 @@
-package models
+package model
 
 type GetBlockRequest struct {
 	Jsonrpc string        `json:"jsonrpc"`

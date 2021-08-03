@@ -1,7 +1,7 @@
 package proxy_tests
 
 import (
-	"rest-api/proxy"
+	"rest-api/ethcache"
 	"testing"
 )
 
@@ -10,12 +10,12 @@ const cleanupExpiration = 5
 
 func TestProxy_GetCache(t *testing.T) {
 	for i := range testCasesGetCache {
-		proxy := proxy.New(defaultExpiration, cleanupExpiration)
+		ethCache := ethcache.New(defaultExpiration, cleanupExpiration)
 
 		if testCasesGetCache[i].isBlockSaved {
-			proxy.SetCache(testCasesGetCache[i].key, testCasesGetCache[i].expectedBlock)
+			ethCache.SetCache(testCasesGetCache[i].key, testCasesGetCache[i].expectedBlock)
 		}
-		block, found := proxy.GetCache(testCasesGetCache[i].key)
+		block, found := ethCache.GetCache(testCasesGetCache[i].key)
 
 		//Found
 		if found != testCasesGetCache[i].found {

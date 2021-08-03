@@ -1,21 +1,23 @@
 package mocks
 
-import "rest-api/models"
+import (
+	"rest-api/model"
+)
 
-type mockProxy struct{}
+type mockEthCache struct{}
 
-func NewProxy(defaultExpiration int32, cleanupExpiration int32) mockProxy {
-	return mockProxy{}
+func NewEthCache(defaultExpiration int32, cleanupExpiration int32) mockEthCache {
+	return mockEthCache{}
 }
 
-func (p *mockProxy) SetCache(key string, block *models.Block) {
+func (p *mockEthCache) SetCache(key string, block *model.Block) {
 }
 
-func (p *mockProxy) GetCache(key string) (*models.Block, bool) {
+func (p *mockEthCache) GetCache(key string) (*model.Block, bool) {
 	if key == "12345" {
 		return nil, false
 	}
-	return &models.Block{
+	return &model.Block{
 		Difficulty:       "0x19f7ee142d8fe6",
 		ExtraData:        "0xd883010a06846765746888676f312e31362e36856c696e7578",
 		GasLimit:         "0xe4e1c0",
@@ -34,7 +36,7 @@ func (p *mockProxy) GetCache(key string) (*models.Block, bool) {
 		Timestamp:        "0x61080628",
 		TotalDifficulty:  "0x601118734b1f13d176a",
 		TransactionsRoot: "0xde9793fbcde0d3ba6d03a07d506102413469a2ada20689f5b08b27eebcf2ad50",
-		Transactions: []models.Transaction{models.Transaction{
+		Transactions: []model.Transaction{model.Transaction{
 			BlockHash:        "0xe9d4061bd545a6006b28bf906edeee714820cb3094dca1ab3eeeb6f3eef1b830",
 			BlockNumber:      "0xc59e6a",
 			From:             "0xec3c1059e889703fa809cf34beb8588ef1c0279c",

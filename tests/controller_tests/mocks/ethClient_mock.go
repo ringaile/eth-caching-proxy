@@ -1,8 +1,8 @@
 package mocks
 
 import (
-	"fmt"
-	"rest-api/models"
+	"errors"
+	"rest-api/model"
 )
 
 type mockEthClient struct{}
@@ -11,11 +11,11 @@ func NewEthClient(url string, timeout int32) mockEthClient {
 	return mockEthClient{}
 }
 
-func (c *mockEthClient) GetBlock(param string) (*models.Block, error) {
+func (c *mockEthClient) GetBlock(param string) (*model.Block, error) {
 	if param == "12345" {
-		return nil, fmt.Errorf("Error: invalid argument 0: hex string without 0x prefix")
+		return nil, errors.New("Error: invalid argument 0: hex string without 0x prefix")
 	}
-	return &models.Block{
+	return &model.Block{
 		Difficulty:       "0x19f7ee142d8fe6",
 		ExtraData:        "0xd883010a06846765746888676f312e31362e36856c696e7578",
 		GasLimit:         "0xe4e1c0",
@@ -34,7 +34,7 @@ func (c *mockEthClient) GetBlock(param string) (*models.Block, error) {
 		Timestamp:        "0x61080628",
 		TotalDifficulty:  "0x601118734b1f13d176a",
 		TransactionsRoot: "0xde9793fbcde0d3ba6d03a07d506102413469a2ada20689f5b08b27eebcf2ad50",
-		Transactions: []models.Transaction{models.Transaction{
+		Transactions: []model.Transaction{model.Transaction{
 			BlockHash:        "0xe9d4061bd545a6006b28bf906edeee714820cb3094dca1ab3eeeb6f3eef1b830",
 			BlockNumber:      "0xc59e6a",
 			From:             "0xec3c1059e889703fa809cf34beb8588ef1c0279c",

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"rest-api/models"
+	"rest-api/model"
 
 	"github.com/gorilla/mux"
 )
@@ -39,8 +39,8 @@ func sendResponse(w http.ResponseWriter, _ *http.Request, data interface{}, stat
 	}
 }
 
-func mapBlockToJson(b models.Block) models.BlockResponse {
-	return models.BlockResponse{
+func mapBlockToJson(b model.Block) model.BlockResponse {
+	return model.BlockResponse{
 		Timestamp:  b.Timestamp,
 		Number:     b.Number,
 		Difficulty: b.Difficulty,

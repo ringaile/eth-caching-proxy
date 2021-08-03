@@ -8,12 +8,12 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"rest-api/models"
+	"rest-api/model"
 	"time"
 )
 
 type EthClient interface {
-	GetBlock(param string) (*models.Block, error)
+	GetBlock(param string) (*model.Block, error)
 }
 
 type CloudflareEthGateway struct {
@@ -30,8 +30,8 @@ func NewCloudflareEthGateway(url string, timeout int32) CloudflareEthGateway {
 	}
 }
 
-func (c *CloudflareEthGateway) GetBlock(param string) (*models.Block, error) {
-	request := &models.GetBlockRequest{
+func (c *CloudflareEthGateway) GetBlock(param string) (*model.Block, error) {
+	request := &model.GetBlockRequest{
 		Jsonrpc: "2.0",
 		Method:  "eth_getBlockByNumber",
 		Params:  []interface{}{param, true},
@@ -49,7 +49,7 @@ func (c *CloudflareEthGateway) GetBlock(param string) (*models.Block, error) {
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 
-	var response *models.Result
+	var response *model.Result
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
 		return nil, err

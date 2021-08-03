@@ -2,20 +2,20 @@ package controller_tests
 
 import (
 	"fmt"
-	"rest-api/models"
+	"rest-api/model"
 )
 
 var testCasesGetBlock = []struct {
 	description   string
 	key           string
-	expectedBlock *models.Block
+	expectedBlock *model.Block
 	expectedError error
 }{
 	// #0
 	{
 		description: "[Successfully received a block.]",
 		key:         "0xc58c82",
-		expectedBlock: &models.Block{
+		expectedBlock: &model.Block{
 			Difficulty:       "0x19f7ee142d8fe6",
 			ExtraData:        "0xd883010a06846765746888676f312e31362e36856c696e7578",
 			GasLimit:         "0xe4e1c0",
@@ -52,7 +52,7 @@ var testCasesGetTransaction = []struct {
 	description         string
 	blockKey            string
 	trxKey              string
-	expectedTransaction *models.Transaction
+	expectedTransaction *model.Transaction
 	expectedError       error
 }{
 	// #0
@@ -60,7 +60,7 @@ var testCasesGetTransaction = []struct {
 		description: "[Successfully received a transaction.]",
 		blockKey:    "0xc59e6a",
 		trxKey:      "0",
-		expectedTransaction: &models.Transaction{
+		expectedTransaction: &model.Transaction{
 			BlockHash:        "0xe9d4061bd545a6006b28bf906edeee714820cb3094dca1ab3eeeb6f3eef1b830",
 			BlockNumber:      "0xc59e6a",
 			From:             "0xec3c1059e889703fa809cf34beb8588ef1c0279c",
@@ -79,12 +79,12 @@ var testCasesGetTransaction = []struct {
 		},
 		expectedError: nil,
 	},
-	// #0
+	// #1
 	{
 		description:         "[No transaction found.]",
 		blockKey:            "12345",
 		trxKey:              "0",
 		expectedTransaction: nil,
-		expectedError:       nil,
+		expectedError:       fmt.Errorf("Error: invalid argument 0: hex string without 0x prefix"),
 	},
 }

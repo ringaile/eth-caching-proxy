@@ -1,12 +1,12 @@
 package proxy_tests
 
-import "rest-api/models"
+import "rest-api/model"
 
 var testCasesGetCache = []struct {
 	description   string
 	key           string
 	isBlockSaved  bool
-	expectedBlock *models.Block
+	expectedBlock *model.Block
 	found         bool
 }{
 	// #0
@@ -15,7 +15,7 @@ var testCasesGetCache = []struct {
 		key:          "1",
 		isBlockSaved: true,
 		found:        true,
-		expectedBlock: &models.Block{
+		expectedBlock: &model.Block{
 			Difficulty:       "0x19f7ee142d8fe6",
 			ExtraData:        "0xd883010a06846765746888676f312e31362e36856c696e7578",
 			GasLimit:         "0xe4e1c0",
