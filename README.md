@@ -60,7 +60,7 @@ make docker_run
 │── ethcache
 │   └── ethcache.go      	// Cache
 │── controller
-│   └── blockcontroller.go  // Application logic
+│   └── blockcontroller.go	// Application logic
 ├── config
 │   └── config.go        	// Configuration
 └── main.go
