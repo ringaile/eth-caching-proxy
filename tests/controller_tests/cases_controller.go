@@ -1,4 +1,4 @@
-package ethClient_tests
+package controller_tests
 
 import (
 	"fmt"
@@ -41,29 +41,50 @@ var testCasesGetBlock = []struct {
 
 	// #1
 	{
-		description: "[No block found.]",
-		key:         "12345",
-		expectedBlock: &models.Block{
-			Difficulty:       "",
-			ExtraData:        "",
-			GasLimit:         "",
-			GasUsed:          "",
-			Hash:             "",
-			LogsBloom:        "",
-			Miner:            "",
-			MixHash:          "",
-			Nonce:            "",
-			Number:           "",
-			ParentHash:       "",
-			ReceiptsRoot:     "",
-			Sha3Uncles:       "",
-			Size:             "",
-			StateRoot:        "",
-			Timestamp:        "",
-			TotalDifficulty:  "",
-			TransactionsRoot: "",
-			Uncles:           nil,
-		},
+		description:   "[No block found.]",
+		key:           "12345",
+		expectedBlock: nil,
 		expectedError: fmt.Errorf("Error: invalid argument 0: hex string without 0x prefix"),
+	},
+}
+
+var testCasesGetTransaction = []struct {
+	description         string
+	blockKey            string
+	trxKey              string
+	expectedTransaction *models.Transaction
+	expectedError       error
+}{
+	// #0
+	{
+		description: "[Successfully received a transaction.]",
+		blockKey:    "0xc59e6a",
+		trxKey:      "0",
+		expectedTransaction: &models.Transaction{
+			BlockHash:        "0xe9d4061bd545a6006b28bf906edeee714820cb3094dca1ab3eeeb6f3eef1b830",
+			BlockNumber:      "0xc59e6a",
+			From:             "0xec3c1059e889703fa809cf34beb8588ef1c0279c",
+			Gas:              "0x3a629",
+			GasPrice:         "0x7ea8ed400",
+			Hash:             "0x57dce8d244fc9996e74270009c9ce2193057c26f61f7010ff2b8be6869c24546",
+			Input:            "0x38ed1739000000000000000000000000000000000000000000001303334ceffb07e00000000000000000000000000000000000000000000000000000000000041ca2a05800000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000ec3c1059e889703fa809cf34beb8588ef1c0279c000000000000000000000000000000000000000000000000000000006108ffc50000000000000000000000000000000000000000000000000000000000000003000000000000000000000000d084b83c305dafd76ae3e1b4e1f1fe2ecccb3988000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec7",
+			Nonce:            "0x14",
+			To:               "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",
+			TransactionIndex: "0x1",
+			Value:            "0x0",
+			Type:             "0x0",
+			V:                "0x25",
+			R:                "0x4f953906b4751f05a75995e9ce3500072df1a26dfecd1c19cd70b31a098813d9",
+			S:                "0x437c5d8bec7f2068946dd95dcb48fe93716aa3fb79da9f3bac2c59c3a112c8bb",
+		},
+		expectedError: nil,
+	},
+	// #0
+	{
+		description:         "[No transaction found.]",
+		blockKey:            "12345",
+		trxKey:              "0",
+		expectedTransaction: nil,
+		expectedError:       nil,
 	},
 }

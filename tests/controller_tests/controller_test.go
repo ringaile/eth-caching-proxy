@@ -1,18 +1,19 @@
-package ethClient_tests
+package controller_tests
 
 import (
-	"rest-api/ethclient"
+	"rest-api/controller"
+	"rest-api/tests/controller_tests/mocks"
 	"testing"
 )
 
-const url = "https://cloudflare-eth.com"
-const timeout = 5
-
-func TestEthClient_GetBllock(t *testing.T) {
+func TestBlockController_GetBlock(t *testing.T) {
 	for i := range testCasesGetBlock {
-		ethClient := ethclient.NewCloudflareEthGateway(url, timeout)
 
-		block, err := ethClient.GetBlock(testCasesGetBlock[i].key)
+		mockProxy := mocks.NewProxy(5, 5)
+		mockEthClient := mocks.NewEthClient("", 5)
+		controller := controller.NewBlockController(&mockEthClient, &mockProxy)
+
+		block, err := controller.GetBlock(testCasesGetBlock[i].key)
 
 		if err != nil {
 			if testCasesGetBlock[i].expectedError == nil {
@@ -124,5 +125,105 @@ func TestEthClient_GetBllock(t *testing.T) {
 		}
 
 		t.Logf("Pass: %s", testCasesGetBlock[i].description)
+	}
+
+}
+
+func TestBlockController_GetTransaction(t *testing.T) {
+	for i := range testCasesGetTransaction {
+		mockProxy := mocks.NewProxy(5, 5)
+		mockEthClient := mocks.NewEthClient("", 5)
+		controller := controller.NewBlockController(&mockEthClient, &mockProxy)
+
+		trx, err := controller.GetTransaction(testCasesGetTransaction[i].blockKey, testCasesGetTransaction[i].trxKey)
+
+		if err != nil {
+			if testCasesGetTransaction[i].expectedError == nil {
+				t.Fatalf("Unexpected error occured: %v", err)
+			}
+
+			if err.Error() != testCasesGetTransaction[i].expectedError.Error() {
+				t.Fatalf("FAIL Error: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedError, err, i)
+			}
+		}
+
+		if trx != nil && testCasesGetTransaction[i].expectedTransaction != nil {
+			//BlockHash
+			if trx.BlockHash != testCasesGetTransaction[i].expectedTransaction.BlockHash {
+				t.Fatalf("FAIL BlockHash: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.BlockHash, trx.BlockHash, i)
+			}
+
+			//BlockNumber
+			if trx.BlockNumber != testCasesGetTransaction[i].expectedTransaction.BlockNumber {
+				t.Fatalf("FAIL BlockNumber: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.BlockNumber, trx.BlockNumber, i)
+			}
+
+			//From
+			if trx.From != testCasesGetTransaction[i].expectedTransaction.From {
+				t.Fatalf("FAIL From: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.From, trx.From, i)
+			}
+
+			//To
+			if trx.To != testCasesGetTransaction[i].expectedTransaction.To {
+				t.Fatalf("FAIL To: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.To, trx.To, i)
+			}
+
+			//Gas
+			if trx.Gas != testCasesGetTransaction[i].expectedTransaction.Gas {
+				t.Fatalf("FAIL Gas: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Gas, trx.Gas, i)
+			}
+
+			//GasPrice
+			if trx.GasPrice != testCasesGetTransaction[i].expectedTransaction.GasPrice {
+				t.Fatalf("FAIL GasPrice: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.GasPrice, trx.GasPrice, i)
+			}
+
+			//Hash
+			if trx.Hash != testCasesGetTransaction[i].expectedTransaction.Hash {
+				t.Fatalf("FAIL Hash: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Hash, trx.Hash, i)
+			}
+
+			//Input
+			if trx.Input != testCasesGetTransaction[i].expectedTransaction.Input {
+				t.Fatalf("FAIL Input: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Input, trx.Input, i)
+			}
+
+			//Nonce
+			if trx.Nonce != testCasesGetTransaction[i].expectedTransaction.Nonce {
+				t.Fatalf("FAIL Nonce: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Nonce, trx.Nonce, i)
+			}
+
+			//TransactionIndex
+			if trx.TransactionIndex != testCasesGetTransaction[i].expectedTransaction.TransactionIndex {
+				t.Fatalf("FAIL TransactionIndex: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.TransactionIndex, trx.TransactionIndex, i)
+			}
+
+			//Value
+			if trx.Value != testCasesGetTransaction[i].expectedTransaction.Value {
+				t.Fatalf("FAIL Value: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Value, trx.Value, i)
+			}
+
+			//Type
+			if trx.Type != testCasesGetTransaction[i].expectedTransaction.Type {
+				t.Fatalf("FAIL Type: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.Type, trx.Type, i)
+			}
+
+			//V
+			if trx.V != testCasesGetTransaction[i].expectedTransaction.V {
+				t.Fatalf("FAIL V: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.V, trx.V, i)
+			}
+
+			//R
+			if trx.R != testCasesGetTransaction[i].expectedTransaction.R {
+				t.Fatalf("FAIL R: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.R, trx.R, i)
+			}
+
+			//S
+			if trx.S != testCasesGetTransaction[i].expectedTransaction.S {
+				t.Fatalf("FAIL S: %s\nExpected: %#v\nActual: %#v\nTestcase: %#v", testCasesGetTransaction[i].description, testCasesGetTransaction[i].expectedTransaction.S, trx.S, i)
+			}
+		}
+
+		t.Logf("Pass: %s", testCasesGetTransaction[i].description)
 	}
 }

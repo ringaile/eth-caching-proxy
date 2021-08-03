@@ -9,6 +9,12 @@ type GetBlockRequest struct {
 
 type Result struct {
 	Block Block `json:"result"`
+	Error Error `json:"error"`
+}
+
+type Error struct {
+	Code    float64 `json:"code"`
+	Message string  `json:"message"`
 }
 
 type Block struct {

@@ -19,6 +19,10 @@ func (s *server) GetBlockHandler() http.HandlerFunc {
 			return
 		}
 
+		if data == nil {
+			sendResponse(w, r, nil, http.StatusNotFound)
+		}
+
 		sendResponse(w, r, data, http.StatusOK)
 	}
 }
@@ -35,6 +39,12 @@ func (s *server) GetTransactionHandler() http.HandlerFunc {
 
 		if err != nil {
 			sendResponse(w, r, nil, http.StatusInternalServerError)
+			return
+		}
+
+		if trx == nil {
+			sendResponse(w, r, nil, http.StatusNotFound)
+			return
 		}
 
 		sendResponse(w, r, trx, http.StatusOK)

@@ -20,9 +20,10 @@ func main() {
 	}
 
 	// Initialize components
-	ethClient := ethclient.NewCloudflareEthGateway(conf.EthClientUrl, conf.Timeout)
+	cloud := ethclient.NewCloudflareEthGateway(conf.EthClientUrl, conf.Timeout)
 	proxy := proxy.New(conf.DefaultExpiration, conf.CleanupExpiration)
-	blockController := controller.NewBlockController(ethClient, proxy)
+
+	blockController := controller.NewBlockController(&cloud, &proxy)
 
 	// Start server
 	s := server.New(blockController)

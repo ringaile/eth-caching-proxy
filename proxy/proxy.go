@@ -10,16 +10,16 @@ import (
 )
 
 type Proxy interface {
-	SetCache(key string, block models.Block)
-	GetCache(key string) (models.Block, bool)
+	SetCache(key string, block *models.Block)
+	GetCache(key string) (*models.Block, bool)
 }
 
 type ProxyImpl struct {
 	cache *c.Cache
 }
 
-func New(defaultExpiration int32, cleanupExpiration int32) *ProxyImpl {
-	return &ProxyImpl{
+func New(defaultExpiration int32, cleanupExpiration int32) ProxyImpl {
+	return ProxyImpl{
 		cache: c.New(time.Duration(rand.Int31n(defaultExpiration))*time.Minute, time.Duration(rand.Int31n(cleanupExpiration))*time.Minute),
 	}
 }

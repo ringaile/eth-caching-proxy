@@ -10,11 +10,11 @@ import (
 const LATEST = "latest"
 
 type BlockController struct {
-	ethClient *ethclient.CloudflareEthGateway
-	proxy     *proxy.ProxyImpl
+	ethClient ethclient.EthClient
+	proxy     proxy.Proxy
 }
 
-func NewBlockController(ethClient *ethclient.CloudflareEthGateway, proxy *proxy.ProxyImpl) *BlockController {
+func NewBlockController(ethClient ethclient.EthClient, proxy proxy.Proxy) *BlockController {
 	return &BlockController{
 		ethClient: ethClient,
 		proxy:     proxy,
@@ -22,12 +22,16 @@ func NewBlockController(ethClient *ethclient.CloudflareEthGateway, proxy *proxy.
 }
 
 func (c *BlockController) GetBlock(key string) (*models.Block, error) {
-	return c.getBlock(key)
+	block, err := c.getBlock(key)
+	if err != nil {
+		return nil, err
+	}
+	return block, err
 }
 
 func (c *BlockController) GetTransaction(block_param string, trx_param string) (*models.Transaction, error) {
 	data, err := c.getBlock(block_param)
-	if err != nil {
+	if err == nil {
 		return nil, err
 	}
 
@@ -59,7 +63,7 @@ func (c *BlockController) getBlock(key string) (*models.Block, error) {
 	if latest {
 		data, err := c.ethClient.GetBlock(key)
 		if err == nil {
-			//do not save latest blocks cause they change
+			//do not save latest 20 blocks cause they change
 			block = data
 		}
 	} else {
